@@ -27,14 +27,25 @@ fn greet_people(query: Query<&Name, With<Person>>) {
     }
 }
 
+pub struct HelloPlugin;
+
+impl Plugin for HelloPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_startup_system(add_people)
+            .add_system(hello_world)
+            .add_system(greet_people);
+    }
+}
+
 fn hello_world() {
     println!("hello world!");
 }
 
 fn main() {
     App::new()
-        .add_startup_system(add_people)
-        .add_system(hello_world)
-        .add_system(greet_people)
+        // This enables default Bevy plugins
+        // like opening a window and starting an event loop (e.g. 60fps)
+        .add_plugins(DefaultPlugins)
+        .add_plugin(HelloPlugin)
         .run();
 }
